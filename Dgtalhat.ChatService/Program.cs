@@ -1,5 +1,6 @@
 using Dgtalhat.ChatService.DataService;
 using Dgtalhat.ChatService.Hubs;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
@@ -11,14 +12,15 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("reactApp", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
+        builder.AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyHeader();
     });
 });
 
-builder.Services.AddSingleton<SharedDb>();
+builder.Services.AddDbContext<ChatDbContext>(
+    opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
