@@ -11,6 +11,9 @@ public class ChatDbContext : DbContext
     }
 
     public DbSet<UserConnection> UserConnections { get; set; }
+    public DbSet<ChatRoom> ChatRooms { get; set; }
+    public DbSet<Message> Messages { get; set; }
+    public DbSet<User> Users { get; set; }
 
     // Add other DbSet properties for additional entities if needed
 
