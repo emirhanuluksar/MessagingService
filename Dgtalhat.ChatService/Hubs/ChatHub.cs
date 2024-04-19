@@ -24,11 +24,11 @@ public class ChatHub : Hub
         await _dbContext.SaveChangesAsync();
 
         // Send join message to the group
-        await Clients.Group(userConnection.ChatRoom)
-            .SendAsync("ReceiveMessage", "Lets Program Bot", $"{userConnection.Username} has Joined the Group", DateTime.Now);
+        await Clients.Group(userConnection.ChatRoomId.ToString())
+            .SendAsync("ReceiveMessage", "Lets Program Bot", $"{userConnection.User.UserName} has Joined the Group", DateTime.Now);
 
         // Send list of connected users to the group
-        await SendConnectedUser(userConnection.ChatRoom);
+        await SendConnectedUser(userConnection.ChatRoomId.ToString());
     }
 
 
@@ -39,8 +39,8 @@ public class ChatHub : Hub
         if (userConnection != null)
         {
             // Send message to the group
-            await Clients.Group(userConnection.ChatRoom)
-                .SendAsync("ReceiveMessage", userConnection.Username, message, DateTime.Now);
+            await Clients.Group(userConnection.ChatRoomId.ToString())
+                .SendAsync("ReceiveMessage", userConnection.User.UserName, message, DateTime.Now);
         }
     }
 
@@ -56,11 +56,11 @@ public class ChatHub : Hub
             await _dbContext.SaveChangesAsync();
 
             // Send leave message to the group
-            await Clients.Group(userConnection.ChatRoom)
-                .SendAsync("ReceiveMessage", "Lets Program bot", $"{userConnection.Username} has Left the Group", DateTime.Now);
+            await Clients.Group(userConnection.ChatRoomId.ToString())
+                .SendAsync("ReceiveMessage", "Lets Program bot", $"{userConnection.User.UserName} has Left the Group", DateTime.Now);
 
             // Send updated list of connected users to the group
-            await SendConnectedUser(userConnection.ChatRoom);
+            await SendConnectedUser(userConnection.ChatRoomId.ToString());
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -69,8 +69,8 @@ public class ChatHub : Hub
     public async Task SendConnectedUser(string room)
     {
         var users = _dbContext.UserConnections
-            .Where(u => u.ChatRoom == room)
-            .Select(s => s.Username);
+            .Where(u => u.ChatRoomId.ToString() == room)
+            .Select(s => s.User.UserName);
         await Clients.Group(room).SendAsync("ConnectedUser", users);
     }
 }

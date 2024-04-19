@@ -2,7 +2,7 @@ namespace Dgtalhat.ChatService.Models;
 
 public class ChatRoom
 {
-    public int ChatRoomId { get; set; }
+    public Guid ChatRoomId { get; set; }
     public ChatType ChatType { get; set; } = ChatType.Private;
     public string ChatRoomName { get; set; } = string.Empty;
     public int ChatCreatorId { get; set; }
