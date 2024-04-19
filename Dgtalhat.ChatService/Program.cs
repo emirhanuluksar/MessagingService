@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<ChatDbContext>(
+builder.Services.AddDbContext<ConversationDbContext>(
     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 var app = builder.Build();
@@ -35,7 +35,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("/Chat");
+app.MapHub<ConversationHub>("/conversation");
 
 app.UseCors("reactApp");
 
